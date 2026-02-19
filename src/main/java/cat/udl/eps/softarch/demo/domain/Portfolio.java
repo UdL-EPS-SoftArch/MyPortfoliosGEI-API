@@ -1,12 +1,25 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Getter
 public class Portfolio extends User {
 
+    @Id
     private String id;
+    @NotBlank
+    @Setter
     private String name;
+    @Setter
     private String description;
+    @Setter
     private Visibility visibility;
-    private User creator;
+
+    private final User creator;
 
     public Portfolio(String id, String name, String description, Visibility visibility, User creator) {
         this.id = id;
@@ -16,40 +29,10 @@ public class Portfolio extends User {
         this.creator = creator;
     }
 
-    public String getPortfolioId() {
-        return this.id;
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String setPortfolioId(String id) {
-        return this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String setName(String name) {
-        return this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String setDescription(String description) {
-        return this.description = description;
-    }
-
-    public Visibility getVisibility() {
-        return visibility;
-    }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
-    }
 }
 
