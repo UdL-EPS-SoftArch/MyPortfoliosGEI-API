@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -34,11 +35,30 @@ public class Tag extends UriEntity<Long> {
         this.name = name;
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
     public void addProject(Project project) {
         projects.add(project);
     }
 
     public void removeProject(Project project) {
         projects.remove(project);
+    }
+
+    // --- Logical Identity Methods ---
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag)) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(name, tag.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }
