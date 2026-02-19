@@ -1,6 +1,6 @@
 package cat.udl.eps.softarch.demo.domain;
 
-public class Portfolio {
+public class Portfolio extends User {
 
     private String id;
     private String name;
@@ -16,11 +16,11 @@ public class Portfolio {
         this.creator = creator;
     }
 
-    public String getId() {
+    public String getPortfolioId() {
         return this.id;
     }
 
-    public String setId(String id) {
+    public String setPortfolioId(String id) {
         return this.id = id;
     }
 
