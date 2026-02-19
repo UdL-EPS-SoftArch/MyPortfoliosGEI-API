@@ -42,10 +42,10 @@ Template for a Spring Boot project including Spring REST, HATEOAS, JPA, etc. Add
 ```mermaid
 classDiagram
     class User {
-        <<abstract>>
         username : String
         password : String
         email : String
+        role : Enum
     }
 
     class UserDetails {
@@ -53,14 +53,6 @@ classDiagram
     }
 
     User ..|> UserDetails
-
-    class Creator
-    class Admin
-    class SuperAdmin
-
-    User <|-- Creator
-    User <|-- Admin
-    Admin <|-- SuperAdmin
 
     class Profile
     User "1" --> "1" Profile : owns
@@ -98,17 +90,23 @@ classDiagram
         actions : Edit, View, Remove
     }
 
-    Creator "1" --> "*" Portfolio : creates
+    User "1" --> "*" Portfolio : creates
     Portfolio "1" --> "1..*" Project : has
     Project "1" --> "1..*" Assets : has
 
-    Creator "1" --> "*" Project : creates
-    Creator "1" --> "*" Assets : uploads / edits / deletes
+    User "1" --> "*" Project : creates
+    User "1" --> "*" Assets : uploads / edits / deletes
 
+    %% Admin Moderation
+    User "1" --> "*" Project : moderates (Admin/Superadmin)
+    User "1" --> "*" Assets : moderates (Admin/Superadmin)
+
+    %% Tagging
     Project "*" --> "*" Tag : tagged with
-    Tag "*" --> "*" Project : moderates
 
-    Project "*" --> "*" Collaborator : collaborates
+    %% Collaborator Flow
+    User "1" --> "*" Collaborator : acts as
+    Collaborator "*" --> "1" Project : assigned to
 
     Project --> Status : has
 ```
