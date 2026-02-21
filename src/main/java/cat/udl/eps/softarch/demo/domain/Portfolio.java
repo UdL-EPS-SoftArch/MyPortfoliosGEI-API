@@ -58,4 +58,3 @@ public class Portfolio extends UriEntity<Long> {
         this.visibility = visibility;
     }
 }
-
