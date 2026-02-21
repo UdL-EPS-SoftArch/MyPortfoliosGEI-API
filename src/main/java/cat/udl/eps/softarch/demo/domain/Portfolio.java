@@ -1,37 +1,43 @@
 package cat.udl.eps.softarch.demo.domain;
 
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@Entity
 @Getter
-public class Portfolio extends User {
+public class Portfolio extends UriEntity<Long> {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotBlank
+    @Column(nullable = false)
     @Setter
     private String name;
+
     @Setter
+    @Column(length = 2000)
     private String description;
+
     @Setter
     private Visibility visibility;
 
-    private final User creator;
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "creator_id")
+    private User creator;
 
-    public Portfolio(String id, String name, String description, Visibility visibility, User creator) {
+    protected Portfolio() {}
+
+    public Portfolio(Long id, String name, String description, Visibility visibility, User creator) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.visibility = visibility;
         this.creator = creator;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
     }
 
 }
