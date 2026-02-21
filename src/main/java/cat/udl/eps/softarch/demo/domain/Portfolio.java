@@ -40,5 +40,22 @@ public class Portfolio extends UriEntity<Long> {
         this.creator = creator;
     }
 
+    private void createPortfolio(String name, String description, Visibility visibility, User creator){
+
+        Portfolio p = new Portfolio();
+        p.id = Long.parseLong(name);        // Temporally solution
+        p.name = name;
+        p.description = description;
+        p.visibility = visibility;
+        p.creator = creator;
+    }
+
+    private void editPortfolio(String name, String description, Visibility visibility){
+        if(name != null && !name.trim().isEmpty()){
+            this.name = name;
+        }
+        this.description = description;
+        this.visibility = visibility;
+    }
 }
 
