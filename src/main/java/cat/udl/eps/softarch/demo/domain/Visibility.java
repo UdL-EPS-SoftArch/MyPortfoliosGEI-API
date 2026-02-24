@@ -1,6 +1,6 @@
 package cat.udl.eps.softarch.demo.domain;
 
-public enum Visivility{
+public enum Visibility{
     PUBLIC,
     PRIVATE
 }
