@@ -15,13 +15,12 @@ public class Project {
     private String description;
     private boolean flagged;
 
-    @Enumerated(Visibility.String)
-    Private Visibility visibility;
+
+    private Visibility visibility;
 
 
     @Nullable
-    @OverrideVisibility
-
+    @Override
     public void getVisibility() {return this.visibility}
     public void setVisibility(enum visibility) {this.visibility = visibility}
 }
