@@ -33,7 +33,23 @@ public class Project {
         this.description = description;
     }
 
-    public void setFlagged(String Flagged) {
+    public void setFlagged(Boolean Flagged) {
         this.flagged = flagged;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public Boolean getFlagged(){
+        return flagged;
+    }
+    @Nullable
+    public Long getId(){
+        return id;
     }
 }
