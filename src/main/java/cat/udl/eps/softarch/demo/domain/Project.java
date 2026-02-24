@@ -23,7 +23,17 @@ public class Project {
     public Visibility getVisibility() {
         return this.visibility;
     }
-    public void setVisibility(Visibility visibility) {
-        this.visibility = visibility;
+    public void setVisibility(Visibility visibility) {this.visibility = visibility;}
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setFlagged(String Flagged) {
+        this.flagged = flagged;
     }
 }
