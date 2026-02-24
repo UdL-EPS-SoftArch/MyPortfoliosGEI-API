@@ -20,7 +20,10 @@ public class Project {
 
 
     @Nullable
-    @Override
-    public void getVisibility() {return this.visibility}
-    public void setVisibility(enum visibility) {this.visibility = visibility}
+    public Visibility getVisibility() {
+        return this.visibility;
+    }
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
+    }
 }
