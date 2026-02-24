@@ -55,32 +55,6 @@ public class Asset extends UriEntity<String> {
         this.storageKey = storageKey;
     }
 
-    // --- Update Methods ---
-
-    /**
-     * Updates the user-facing metadata of the asset.
-     */
-    public void updateMetadata(String name, String description) {
-        if (name != null && !name.trim().isEmpty()) {
-            this.name = name;
-        }
-        if (description != null) {
-            this.description = description;
-        }
-    }
-
-    /**
-     * Replaces the underlying physical file metadata.
-     * These fields are grouped because changing the file changes all three.
-     */
-    public void updateFile(String contentType, Long size, String storageKey) {
-        if (contentType != null && size != null && storageKey != null) {
-            this.contentType = contentType;
-            this.size = size;
-            this.storageKey = storageKey;
-        }
-    }
-
     // --- Auto-Managed JPA Lifecycle Hooks ---
 
     @PrePersist

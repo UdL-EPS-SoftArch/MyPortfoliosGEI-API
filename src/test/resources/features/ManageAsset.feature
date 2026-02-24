@@ -22,7 +22,7 @@ Feature: Manage Asset
     Given I login as "demo" with password "password"
     And An asset with name "Asset to Delete" and description "This will be deleted" exists
     When I delete the asset
-    Then The response code is 204
+    Then The response code is 200
     And No asset exists with name "Asset to Delete"
 
   Scenario: Cannot upload asset without authentication

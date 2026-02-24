@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cat.udl.eps.softarch.demo.domain.Asset;
 import cat.udl.eps.softarch.demo.repository.AssetRepository;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -31,7 +32,7 @@ public class ManageAssetStepDefs {
         this.assetRepository = assetRepository;
     }
 
-    @When("^I upload a new asset with name \"([^\"]*)\", description \"([^\"]*)\" content type \"([^\"]*)\" and size (\\d+)$")
+    @When("I upload a new asset with name {string}, description {string}, content type {string} and size {long}")
     public void iUploadANewAsset(String name, String description, String contentType, Long size) throws Throwable {
         String assetId = UUID.randomUUID().toString();
         this.currentAssetId = assetId;
