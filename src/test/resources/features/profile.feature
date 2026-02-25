@@ -262,5 +262,29 @@ Scenario: Fail to create profile with blank fullName
       """
     Then the response status should be 400
     And the response body should contain "fullName"
-
     
+# ------------------------------------------------------------
+# UPDATE EDGE CASES
+# ------------------------------------------------------------
+
+Scenario: Fail to update non-existing profile
+    When I send a PUT request to "/profiles/999" with body:
+      """
+      {
+        "fullName": "Does Not Exist"
+      }
+      """
+    Then the response status should be 404
+    And the response body should contain "Profile not found"
+
+  Scenario: Prevent changing profile email to an existing one
+    Given a profile exists with email "ada@example.com"
+    And a profile exists with id 2 and email "alan@example.com"
+    When I send a PUT request to "/profiles/2" with body:
+      """
+      {
+        "email": "ada@example.com"
+      }
+      """
+    Then the response status should be 409
+    And the response body should contain "email already exists"
