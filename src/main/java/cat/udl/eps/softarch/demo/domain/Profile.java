@@ -60,34 +60,4 @@ public class Profile extends UriEntity<Long> {
     @JoinColumn(name = "user_id", unique = true)
     private User user;
 
-    /*
-     * A Profile creates many Projects
-     */
-    @OneToMany(mappedBy = "profile",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    @Builder.Default
-    private Set<Project> projects = new HashSet<>();
-
-
-    /* ---------- Helper Methods ---------- */
-
-    public void addProject(Project project) {
-        projects.add(project);
-        project.setProfile(this);
-    }
-
-    public void removeProject(Project project) {
-        projects.remove(project);
-        project.setProfile(null);
-    }
-
-    public void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
-    }
-
-    public void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 }
