@@ -2,11 +2,16 @@ package cat.udl.eps.softarch.demo.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Getter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Portfolio extends UriEntity<Long> {
 
     @Id
@@ -27,18 +32,9 @@ public class Portfolio extends UriEntity<Long> {
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "creator_id")
     private User creator;
 
     protected Portfolio() {}
-
-    public Portfolio(Long id, String name, String description, Visibility visibility, User creator) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.visibility = visibility;
-        this.creator = creator;
-    }
 
     private void createPortfolio(String name, String description, Visibility visibility, User creator){
 
