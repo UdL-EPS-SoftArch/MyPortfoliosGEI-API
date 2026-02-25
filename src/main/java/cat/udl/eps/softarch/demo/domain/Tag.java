@@ -84,5 +84,10 @@ public class Tag extends UriEntity<Long> {
     public Tag(String name) {
         this.name = name;
     }
+
+    @Override
+    public Long getId() {
+        return null;
+    }
 }
 
