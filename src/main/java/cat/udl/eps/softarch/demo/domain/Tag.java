@@ -87,7 +87,7 @@ public class Tag extends UriEntity<Long> {
 
     @Override
     public Long getId() {
-        return null;
+        return id;
     }
 }
 
