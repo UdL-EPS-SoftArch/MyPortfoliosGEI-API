@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -35,6 +36,11 @@ public class Asset extends UriEntity<String> {
 
     @Column(nullable = false, unique = true)
     private String storageKey;    // path or S3 key
+
+    // --- Relationships ---
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Project belongsTo;
 
     // --- Timestamps ---
     @DateTimeFormat
