@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -28,10 +29,12 @@ public class Portfolio extends UriEntity<Long> {
     private String description;
 
     @Setter
+    @Enumerated(EnumType.STRING)
     private Visibility visibility;
 
     @Setter
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private User creator;
 
     protected Portfolio() {}
