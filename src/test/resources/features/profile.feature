@@ -234,3 +234,33 @@ Feature: Profile Management
       """
     Then the response status should be 409
     And the response body should contain "User already has a profile"
+
+# ------------------------------------------------------------
+# VALIDATION EDGE CASES
+# ------------------------------------------------------------
+
+Scenario: Fail to create profile with blank fullName
+    When I send a POST request to "/profiles" with body:
+      """
+      {
+        "fullName": "   ",
+        "email": "blankname@example.com",
+        "userId": 1
+      }
+      """
+    Then the response status should be 400
+    And the response body should contain "fullName"
+
+  Scenario: Fail to create profile with excessively long fullName
+    When I send a POST request to "/profiles" with body:
+      """
+      {
+        "fullName": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "email": "toolong@example.com",
+        "userId": 1
+      }
+      """
+    Then the response status should be 400
+    And the response body should contain "fullName"
+
+    
