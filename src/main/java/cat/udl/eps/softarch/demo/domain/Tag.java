@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+
+/*
 @Entity
 @Getter
 @Setter
@@ -61,4 +63,26 @@ public class Tag extends UriEntity<Long> {
     public int hashCode() {
         return Objects.hashCode(name);
     }
+
+*/
+
+@Entity
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Tag extends UriEntity<Long> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @EqualsAndHashCode.Include
+    private String name;
+
+    public Tag() {}
+    public Tag(String name) {
+        this.name = name;
+    }
 }
+
