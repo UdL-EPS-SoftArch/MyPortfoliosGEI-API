@@ -43,6 +43,11 @@ public class Project extends UriEntity<Long> {
     @JsonIdentityReference(alwaysAsId = true)
     private User creator;
 
+    @Setter
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Project project;
+
     // --- Constructors ---
 
     /**
