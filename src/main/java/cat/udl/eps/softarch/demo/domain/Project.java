@@ -29,6 +29,7 @@ public class Project extends UriEntity<Long> {
     private String description;
     private boolean flagged;
     private Visibility visibility;
+    private Status status;
 
     @DateTimeFormat
     private ZonedDateTime created;
