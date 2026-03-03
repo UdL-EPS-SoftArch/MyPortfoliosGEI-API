@@ -2,9 +2,13 @@ package cat.udl.eps.softarch.demo.domain;
 
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -34,7 +38,9 @@ public class Project extends UriEntity<Long> {
     @DateTimeFormat
     private ZonedDateTime lastModified;
 
+    @Setter
     @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
     private User creator;
 
     // --- Constructors ---
