@@ -1,13 +1,10 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 import java.time.ZonedDateTime;
 
@@ -36,6 +33,9 @@ public class Project extends UriEntity<Long> {
 
     @DateTimeFormat
     private ZonedDateTime lastModified;
+
+    @ManyToOne
+    private User creator;
 
     // --- Constructors ---
 
