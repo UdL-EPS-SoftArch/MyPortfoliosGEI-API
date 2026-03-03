@@ -33,6 +33,10 @@ public class Portfolio extends UriEntity<Long> {
     private Visibility visibility;
 
     @Setter
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Setter
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private User creator;
