@@ -1,14 +1,14 @@
 package cat.udl.eps.softarch.demo.steps;
 
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.hasItem;
+
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.springframework.http.MediaType;
-import static org.hamcrest.Matchers.not;
 
 import java.nio.charset.StandardCharsets;
 
@@ -22,15 +22,18 @@ public class PortfolioStepDefs {
     public PortfolioStepDefs(StepDefs stepDefs) {
         this.stepDefs = stepDefs;
     }
+
+
     @When("I create a new portfolio with name {string}")
-    public void iCreateANewPortfolioWithName(String name) throws Exception {
+    public void iCreateANewPortfolioWithName(String name) throws Throwable {
         String portfolioJson = """
             {
             "name": "%s",
             "description": "Test description",
-            "visibility": "PUBLIC"
+            "visibility": "PUBLIC",
+            "creator": "/users/%s"
             }
-            """.formatted(name);
+            """.formatted(name, AuthenticationStepDefs.currentUsername);
         //Enviar JSON per evitar posar Portfolio public
         // i que es puguin crear objectes amb estats invalids
 
@@ -45,10 +48,10 @@ public class PortfolioStepDefs {
     }
 
     @And("The list of portfolios owned by {string} includes one named {string}")
-    public void theListOfPortfoliosOwnedByIncludesOneNamed(String username, String portfolioName) throws Exception {
+    public void theListOfPortfoliosOwnedByIncludesOneNamed(String username, String portfolioName) throws Throwable {
         stepDefs.mockMvc.perform(
             get("/portfolios/search/findByCreator")
-                .param("user", username)
+                .param("user", "/users/" + username)
                 .with(AuthenticationStepDefs.authenticate())
                 .accept(MediaType.APPLICATION_JSON)
         )
@@ -58,10 +61,15 @@ public class PortfolioStepDefs {
     }
 
     @And("The new portfolio is owned by {string}")
-    public void theNewPortfolioIsOwnedBy(String username) throws Exception {
-        stepDefs.result
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.creator").value(username));
+    public void theNewPortfolioIsOwnedBy(String username) throws Throwable {
+        String newPortfolioUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get(newPortfolioUri + "/creator")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .characterEncoding(StandardCharsets.UTF_8)
+                    .with(AuthenticationStepDefs.authenticate()))
+            .andDo(print())
+            .andExpect(jsonPath("$.username", is(username)));
 
     }
 
