@@ -7,7 +7,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.ZonedDateTime;
 
@@ -15,6 +19,7 @@ import java.time.ZonedDateTime;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Needed by JPA
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Asset extends UriEntity<String> {
 
     @Id
@@ -42,12 +47,27 @@ public class Asset extends UriEntity<String> {
     @JsonIdentityReference(alwaysAsId = true)
     private Project belongsTo;
 
-    // --- Timestamps ---
-    @DateTimeFormat
+    // --- Ownership & Authorship ---
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User owner;
+
+    @CreatedBy
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User createdBy;
+
+    @LastModifiedBy
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User lastModifiedBy;
+
+    // --- Timestamps (auto-managed by Spring Data JPA Auditing) ---
+    @CreatedDate
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdAt;
 
-    @DateTimeFormat
+    @LastModifiedDate
     @Column(nullable = false)
     private ZonedDateTime updatedAt;
 
@@ -59,18 +79,5 @@ public class Asset extends UriEntity<String> {
         this.contentType = contentType;
         this.size = size;
         this.storageKey = storageKey;
-    }
-
-    // --- Auto-Managed JPA Lifecycle Hooks ---
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = ZonedDateTime.now();
-        this.updatedAt = this.createdAt;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = ZonedDateTime.now();
     }
 }
