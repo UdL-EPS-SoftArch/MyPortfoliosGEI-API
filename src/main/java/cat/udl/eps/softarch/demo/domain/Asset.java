@@ -43,9 +43,6 @@ public class Asset extends UriEntity<String> {
     private Project belongsTo;
 
     // --- Ownership & Authorship ---
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
-    private User owner;
 
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
