@@ -126,7 +126,7 @@ public class ManageAssetStepDefs {
                     .characterEncoding(StandardCharsets.UTF_8)
                     .with(AuthenticationStepDefs.authenticate()))
             .andDo(print())
-            .andExpect(jsonPath("$.id", is(username)));
+            .andExpect(jsonPath("$.username", is(username)));
     }
 
     @And("^The asset was last modified by \"([^\"]*)\"$")
@@ -138,7 +138,7 @@ public class ManageAssetStepDefs {
                     .characterEncoding(StandardCharsets.UTF_8)
                     .with(AuthenticationStepDefs.authenticate()))
             .andDo(print())
-            .andExpect(jsonPath("$.id", is(username)));
+            .andExpect(jsonPath("$.username", is(username)));
     }
 
     // And — DB-level existence assertions

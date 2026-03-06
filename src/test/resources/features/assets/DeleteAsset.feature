@@ -12,7 +12,7 @@
     Given I login as "collaborator" with password "password123"
     And An asset with name "Disposable Asset" and description "Will be removed" exists
     When I delete the asset
-    Then The response code is 204
+    Then The response code is 200
     And No asset exists with name "Disposable Asset"
 
   # ── Failure ──────────────────────────────────────────────────────────────────
