@@ -117,18 +117,6 @@ public class ManageAssetStepDefs {
 
     // And — ownership assertions
 
-    @And("^The asset is owned by \"([^\"]*)\"$")
-    public void theAssetIsOwnedBy(String username) throws Throwable {
-        String uri = resolvedAssetUri() + "/owner";
-        stepDefs.result = stepDefs.mockMvc.perform(
-                get(uri)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .characterEncoding(StandardCharsets.UTF_8)
-                    .with(AuthenticationStepDefs.authenticate()))
-            .andDo(print())
-            .andExpect(jsonPath("$.id", is(username)));
-    }
-
     @And("^The asset was created by \"([^\"]*)\"$")
     public void theAssetWasCreatedBy(String username) throws Throwable {
         String uri = resolvedAssetUri() + "/createdBy";
