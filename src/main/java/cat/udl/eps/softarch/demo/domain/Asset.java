@@ -1,15 +1,18 @@
 package cat.udl.eps.softarch.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // Needed by JPA
 @Entity
 public class Asset extends UriEntity<String> {
@@ -34,7 +37,22 @@ public class Asset extends UriEntity<String> {
     @Column(nullable = false, unique = true)
     private String storageKey;    // path or S3 key
 
-    // --- Timestamps ---
+    // --- Relationships ---
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Project belongsTo;
+
+    // --- Ownership & Authorship ---
+
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User createdBy;
+
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User lastModifiedBy;
+
+    // --- Timestamps (managed via JPA lifecycle callbacks) ---
     @DateTimeFormat
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdAt;
@@ -53,38 +71,11 @@ public class Asset extends UriEntity<String> {
         this.storageKey = storageKey;
     }
 
-    // --- Update Methods ---
-
-    /**
-     * Updates the user-facing metadata of the asset.
-     */
-    public void updateMetadata(String name, String description) {
-        if (name != null && !name.trim().isEmpty()) {
-            this.name = name;
-        }
-        if (description != null) {
-            this.description = description;
-        }
-    }
-
-    /**
-     * Replaces the underlying physical file metadata.
-     * These fields are grouped because changing the file changes all three.
-     */
-    public void updateFile(String contentType, Long size, String storageKey) {
-        if (contentType != null && size != null && storageKey != null) {
-            this.contentType = contentType;
-            this.size = size;
-            this.storageKey = storageKey;
-        }
-    }
-
-    // --- Auto-Managed JPA Lifecycle Hooks ---
-
     @PrePersist
     protected void onCreate() {
-        this.createdAt = ZonedDateTime.now();
-        this.updatedAt = this.createdAt;
+        ZonedDateTime now = ZonedDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
     @PreUpdate
