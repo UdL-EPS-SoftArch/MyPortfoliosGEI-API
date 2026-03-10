@@ -13,7 +13,12 @@ import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
 import org.springframework.data.rest.core.annotation.HandleBeforeLinkSave;
 import org.springframework.data.rest.core.annotation.HandleBeforeSave;
 import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 @RepositoryEventHandler
@@ -35,11 +40,19 @@ public class UserEventHandler {
     @HandleBeforeSave
     public void handleUserPreSave(User user) {
         logger.info("Before updating: {}", user.toString());
+        User currentUser = getCurrentUser();
+        if (currentUser != null && !Objects.equals(currentUser.getId(), user.getId())) {
+            throw new AccessDeniedException("You can only update your own account");
+        }
     }
 
     @HandleBeforeDelete
     public void handleUserPreDelete(User user) {
         logger.info("Before deleting: {}", user.toString());
+        User currentUser = getCurrentUser();
+        if (currentUser != null && !Objects.equals(currentUser.getId(), user.getId())) {
+            throw new AccessDeniedException("You can only delete your own account");
+        }
     }
 
     @HandleBeforeLinkSave
@@ -71,5 +84,14 @@ public class UserEventHandler {
     @HandleAfterLinkSave
     public void handleUserPostLinkSave(User user, Object o) {
         logger.info("After linking: {} to {}", user.toString(), o.toString());
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication.getPrincipal().equals("anonymousUser")) {
+            return null;
+        }
+        return (User) authentication.getPrincipal();
     }
 }
