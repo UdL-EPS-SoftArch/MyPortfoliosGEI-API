@@ -4,8 +4,11 @@ import cat.udl.eps.softarch.demo.domain.Tag;
 import cat.udl.eps.softarch.demo.repository.TagRepository;
 import io.cucumber.java.en.*;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -18,6 +21,9 @@ public class ManageTagStepDefs {
     private final TagRepository tagRepository;
 
     private Long lastTagId;
+
+    private static final String TEST_USER = "user";
+    private static final String TEST_PASSWORD = "password";
 
     public ManageTagStepDefs(StepDefs stepDefs, TagRepository tagRepository) {
         this.stepDefs = stepDefs;
@@ -59,11 +65,11 @@ public class ManageTagStepDefs {
         Tag tag = new Tag(name);
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            post("/tags")
+            withAuth(post("/tags")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(stepDefs.mapper.writeValueAsString(tag))
                 .characterEncoding(StandardCharsets.UTF_8)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
         ).andDo(print());
     }
 
@@ -75,8 +81,7 @@ public class ManageTagStepDefs {
     public void requestAllTags() throws Exception {
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            get("/tags")
-                .accept(MediaType.APPLICATION_JSON)
+            withAuth(get("/tags").accept(MediaType.APPLICATION_JSON))
         ).andDo(print());
     }
 
@@ -84,8 +89,7 @@ public class ManageTagStepDefs {
     public void requestTagById() throws Exception {
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            get("/tags/" + lastTagId)
-                .accept(MediaType.APPLICATION_JSON)
+            withAuth(get("/tags/" + lastTagId).accept(MediaType.APPLICATION_JSON))
         ).andDo(print());
     }
 
@@ -93,8 +97,7 @@ public class ManageTagStepDefs {
     public void requestTagByIdNumber(Long id) throws Exception {
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            get("/tags/" + id)
-                .accept(MediaType.APPLICATION_JSON)
+            withAuth(get("/tags/" + id).accept(MediaType.APPLICATION_JSON))
         ).andDo(print());
     }
 
@@ -106,7 +109,7 @@ public class ManageTagStepDefs {
     public void deleteThatTag() throws Exception {
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            delete("/tags/" + lastTagId)
+            withAuth(delete("/tags/" + lastTagId))
         ).andDo(print());
     }
 
@@ -114,7 +117,7 @@ public class ManageTagStepDefs {
     public void deleteTagById(Long id) throws Exception {
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            delete("/tags/" + id)
+            withAuth(delete("/tags/" + id))
         ).andDo(print());
     }
 
@@ -142,7 +145,17 @@ public class ManageTagStepDefs {
     public void requestDeletedTag() throws Exception {
 
         stepDefs.mockMvc.perform(
-            get("/tags/" + lastTagId)
+            withAuth(get("/tags/" + lastTagId))
         ).andExpect(status().isNotFound());
+    }
+
+    // -------------------------
+    // HELPER METHOD FOR AUTH
+    // -------------------------
+
+    private RequestBuilder withAuth(MockHttpServletRequestBuilder request) {
+        String basicAuth = Base64.getEncoder()
+            .encodeToString((TEST_USER + ":" + TEST_PASSWORD).getBytes());
+        return request.header("Authorization", "Basic " + basicAuth);
     }
 }
