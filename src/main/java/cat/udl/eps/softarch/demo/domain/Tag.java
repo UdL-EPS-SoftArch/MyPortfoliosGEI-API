@@ -1,20 +1,15 @@
 package cat.udl.eps.softarch.demo.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
-
-/*
 @Entity
 @Getter
 @Setter
@@ -26,9 +21,14 @@ public class Tag extends UriEntity<Long> {
     private Long id;
 
     @NotBlank
+    @Column(nullable = false, unique = true)
     @EqualsAndHashCode.Include
     private String name;
 
+    // --- Relationships ---
+
+    @ManyToMany(mappedBy = "tags")
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<Project> projects = new HashSet<>();
 
     public Tag() {}
@@ -37,52 +37,16 @@ public class Tag extends UriEntity<Long> {
         this.name = name;
     }
 
-    public void setName(String name){
-        this.name = name;
-    }
+    // --- Helper methods ---
 
     public void addProject(Project project) {
         projects.add(project);
+        project.getTags().add(this);
     }
 
     public void removeProject(Project project) {
         projects.remove(project);
-    }
-
-    // --- Logical Identity Methods ---
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tag)) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(name);
-    }
-
-*/
-
-@Entity
-@Getter
-@Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Tag extends UriEntity<Long> {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    @EqualsAndHashCode.Include
-    private String name;
-
-    public Tag() {}
-    public Tag(String name) {
-        this.name = name;
+        project.getTags().remove(this);
     }
 
     @Override
@@ -90,4 +54,3 @@ public class Tag extends UriEntity<Long> {
         return id;
     }
 }
-
