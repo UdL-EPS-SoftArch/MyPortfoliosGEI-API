@@ -16,4 +16,9 @@ public interface PortfolioRepository extends CrudRepository<Portfolio, Long>, Pa
     List<Portfolio> findByCreator(@Param("user") User creator);
     List<Portfolio> findByNameContaining(@Param("name") String text);
     List<Portfolio> findByVisibility(@Param("visibility") Visibility visibility);
+
+    List<Portfolio> findByCreatorAndVisibility(
+        @Param("user") User creator,
+        @Param("visibility") Visibility visibility
+    );
 }
