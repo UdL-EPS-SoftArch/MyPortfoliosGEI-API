@@ -19,7 +19,6 @@ public class Creator extends User {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portfolio> portfolios = new ArrayList<>();
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
         name = "creator_creates_tag",
         joinColumns = @JoinColumn(name = "creator_username"),
