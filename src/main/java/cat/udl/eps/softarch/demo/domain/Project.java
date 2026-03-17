@@ -45,7 +45,6 @@ public class Project extends UriEntity<Long> {
     @DateTimeFormat
     private ZonedDateTime lastModified;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Asset> assets;
 
     // User Relations
@@ -64,8 +63,7 @@ public class Project extends UriEntity<Long> {
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Project project;
-
-    @OneToMany
+    
     private java.util.List<User> collaborators;
 
     // --- Constructors ---
