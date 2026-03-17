@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
