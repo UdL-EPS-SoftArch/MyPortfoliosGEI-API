@@ -2,6 +2,8 @@ package cat.udl.eps.softarch.demo.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
