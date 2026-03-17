@@ -55,6 +55,9 @@ public class Project extends UriEntity<Long> {
     @JsonIdentityReference(alwaysAsId = true)
     private Project project;
 
+    @OneToMany
+    private java.util.List<User> collaborators;
+
     // --- Constructors ---
 
     /**
