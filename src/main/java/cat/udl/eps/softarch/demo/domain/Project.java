@@ -38,10 +38,17 @@ public class Project extends UriEntity<Long> {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Asset> assets;
 
+    // User Relations
+
     @Setter
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private User creator;
+
+    @Setter
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User moderator;
 
     @Setter
     @ManyToOne
