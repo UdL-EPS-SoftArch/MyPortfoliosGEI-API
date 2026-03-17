@@ -28,6 +28,7 @@ public class Project extends UriEntity<Long> {
     private boolean flagged;
     private Visibility visibility;
     private Status status;
+    private Boolean isPrivate;
 
     @DateTimeFormat
     private ZonedDateTime created;
@@ -64,13 +65,13 @@ public class Project extends UriEntity<Long> {
      * Constructs a new Project with the specified name, description, and visibility.
      * @param name the name of the project
      * @param description a brief description of the project
-     * @param visibility the visibility level of the project
+     * @param isPrivate the visibility status of the project (true for private, false for public)
      */
-    public Project(String name, String description, Visibility visibility) {
+    public Project(String name, String description, Boolean isPrivate) {
         this.flagged = false;
         this.name = name;
         this.description = description;
-        this.visibility = visibility;
+        this.isPrivate = isPrivate;
         this.created = ZonedDateTime.now();
         this.lastModified = ZonedDateTime.now();
     }

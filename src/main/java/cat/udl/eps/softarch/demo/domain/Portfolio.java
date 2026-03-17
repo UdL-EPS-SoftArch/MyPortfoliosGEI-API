@@ -29,8 +29,7 @@ public class Portfolio extends UriEntity<Long> {
     private String description;
 
     @Setter
-    @Enumerated(EnumType.STRING)
-    private Visibility visibility;
+    private Boolean isPrivate;
 
     @Setter
     @ManyToOne

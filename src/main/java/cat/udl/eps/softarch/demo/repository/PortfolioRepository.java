@@ -3,7 +3,6 @@ package cat.udl.eps.softarch.demo.repository;
 import cat.udl.eps.softarch.demo.domain.Portfolio;
 import cat.udl.eps.softarch.demo.domain.Project;
 import cat.udl.eps.softarch.demo.domain.User;
-import cat.udl.eps.softarch.demo.domain.Visibility;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +18,5 @@ public interface PortfolioRepository extends CrudRepository<Portfolio, Long>, Pa
     List<Portfolio> findByNameContaining(@Param("name") String text);
     List<Portfolio> findByVisibility(@Param("visibility") Visibility visibility);
     Optional<Project> findByName(String name);
+    List<Portfolio> findByIsPrivate(@Param("isPrivate") Boolean isPrivate);
 }
