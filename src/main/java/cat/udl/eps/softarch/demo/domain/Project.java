@@ -1,5 +1,6 @@
 package cat.udl.eps.softarch.demo.domain;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +34,9 @@ public class Project extends UriEntity<Long> {
 
     @DateTimeFormat
     private ZonedDateTime lastModified;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Asset> assets;
 
     @Setter
     @ManyToOne
