@@ -25,8 +25,16 @@ public class Project extends UriEntity<Long> {
     @NotBlank
     private String name;
     private String description;
+
+    @NotBlank
     private boolean flagged;
+
+    @NotBlank
+    @Enumerated(EnumType.STRING)
     private Visibility visibility;
+
+    @NotBlank
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @DateTimeFormat
