@@ -4,7 +4,8 @@ import cat.udl.eps.softarch.demo.domain.Record;
 import cat.udl.eps.softarch.demo.repository.RecordRepository;
 import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import cat.udl.eps.softarch.demo.domain.User;
 import java.time.ZonedDateTime;
 
 @Component
@@ -31,6 +32,16 @@ public class RecordEventHandler {
 
     @HandleBeforeSave
     public void handleRecordPreSave(Record record) {
+
+        User currentUser = (User) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        if (record.getOwnedBy() != null && !record.getOwnedBy().equals(currentUser)) {
+            throw new IllegalArgumentException("You cannot modify this record");
+        }
+
         ZonedDateTime timeStamp = ZonedDateTime.now();
         record.setModified(timeStamp);
     }
