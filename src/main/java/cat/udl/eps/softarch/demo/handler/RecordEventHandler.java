@@ -20,10 +20,16 @@ public class RecordEventHandler {
     @HandleBeforeCreate
     public void handleRecordPreCreate(Record record) {
 
-        // Validation métier
         if (record.getName() == null || record.getName().isBlank()) {
             throw new IllegalArgumentException("Record name cannot be empty");
         }
+
+        User currentUser = (User) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        record.setOwnedBy(currentUser);
 
         ZonedDateTime timeStamp = ZonedDateTime.now();
         record.setCreated(timeStamp);
