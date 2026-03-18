@@ -18,6 +18,12 @@ public class RecordEventHandler {
 
     @HandleBeforeCreate
     public void handleRecordPreCreate(Record record) {
+
+        // Validation métier
+        if (record.getName() == null || record.getName().isBlank()) {
+            throw new IllegalArgumentException("Record name cannot be empty");
+        }
+
         ZonedDateTime timeStamp = ZonedDateTime.now();
         record.setCreated(timeStamp);
         record.setModified(timeStamp);
