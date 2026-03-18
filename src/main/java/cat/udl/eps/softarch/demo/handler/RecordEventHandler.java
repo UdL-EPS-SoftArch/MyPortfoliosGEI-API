@@ -45,4 +45,17 @@ public class RecordEventHandler {
         ZonedDateTime timeStamp = ZonedDateTime.now();
         record.setModified(timeStamp);
     }
+
+    @HandleBeforeDelete
+    public void handleRecordPreDelete(Record record) {
+
+        User currentUser = (User) SecurityContextHolder
+            .getContext()
+            .getAuthentication()
+            .getPrincipal();
+
+        if (record.getOwnedBy() == null || !record.getOwnedBy().equals(currentUser)) {
+            throw new IllegalArgumentException("You cannot delete this record");
+        }
+    }
 }
