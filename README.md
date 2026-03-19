@@ -2,9 +2,8 @@
 
 Template for a Spring Boot project including Spring REST, HATEOAS, JPA, etc. Additional details: [HELP.md](HELP.md)
 
-[![Open Issues](https://img.shields.io/github/issues-raw/UdL-EPS-SoftArch/spring-template?logo=github)](https://github.com/orgs/UdL-EPS-SoftArch/projects/12)
-[![CI/CD](https://github.com/UdL-EPS-SoftArch/spring-template/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/UdL-EPS-SoftArch/spring-template/actions)
-[![CucumberReports: UdL-EPS-SoftArch](https://messages.cucumber.io/api/report-collections/faed8ca5-e474-4a1a-a72a-b8e2a2cd69f0/badge)](https://reports.cucumber.io/report-collections/faed8ca5-e474-4a1a-a72a-b8e2a2cd69f0)
+[![Open Issues](https://img.shields.io/github/issues-raw/UdL-EPS-SoftArch/MyPortfoliosGEI-API?logo=github)](https://github.com/orgs/UdL-EPS-SoftArch/projects/27)
+[![CI/CD](https://github.com/UdL-EPS-SoftArch/MyPortfoliosGEI-API/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/UdL-EPS-SoftArch/MyPortfoliosGEI-API/actions)
 [![Deployment status](https://img.shields.io/uptimerobot/status/m792691238-18db2a43adf8d8ded474f885)](https://spring-template.fly.dev/users)
 
 ## Vision
@@ -43,10 +42,10 @@ Template for a Spring Boot project including Spring REST, HATEOAS, JPA, etc. Add
 ```mermaid
 classDiagram
     class User {
-        <<abstract>>
         username : String
         password : String
         email : String
+        role : Enum
     }
 
     class UserDetails {
@@ -54,14 +53,6 @@ classDiagram
     }
 
     User ..|> UserDetails
-
-    class Creator
-    class Admin
-    class SuperAdmin
-
-    User <|-- Creator
-    User <|-- Admin
-    Admin <|-- SuperAdmin
 
     class Profile
     User "1" --> "1" Profile : owns
@@ -99,17 +90,23 @@ classDiagram
         actions : Edit, View, Remove
     }
 
-    Creator "1" --> "*" Portfolio : creates
+    User "1" --> "*" Portfolio : creates
     Portfolio "1" --> "1..*" Project : has
     Project "1" --> "1..*" Assets : has
 
-    Creator "1" --> "*" Project : creates
-    Creator "1" --> "*" Assets : uploads / edits / deletes
+    User "1" --> "*" Project : creates
+    User "1" --> "*" Assets : uploads / edits / deletes
 
+    %% Admin Moderation
+    User "1" --> "*" Project : moderates (Admin/Superadmin)
+    User "1" --> "*" Assets : moderates (Admin/Superadmin)
+
+    %% Tagging
     Project "*" --> "*" Tag : tagged with
-    Tag "*" --> "*" Project : moderates
 
-    Project "*" --> "*" Collaborator : collaborates
+    %% Collaborator Flow
+    User "1" --> "*" Collaborator : acts as
+    Collaborator "*" --> "1" Project : assigned to
 
     Project --> Status : has
 ```
