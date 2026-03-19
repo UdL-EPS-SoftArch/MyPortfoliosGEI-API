@@ -35,7 +35,7 @@ public class ManageAssetStepDefs {
     public void anAssetWithNameAndDescriptionExists(String name, String description) {
         currentAssetId = UUID.randomUUID().toString();
         Asset asset = new Asset(currentAssetId, name, description,
-                "application/octet-stream", 1024L, "storage/" + currentAssetId);
+                "text/plain", "http://example.com/asset.txt");
         assetRepository.save(asset);
     }
 
@@ -45,16 +45,16 @@ public class ManageAssetStepDefs {
     public void iCreateANewAssetWithNameAndDescription(String name, String description) throws Throwable {
         currentAssetId = UUID.randomUUID().toString();
         Asset asset = new Asset(currentAssetId, name, description,
-                "application/octet-stream", 1024L, "storage/" + currentAssetId);
+                "text/plain", "http://example.com/asset.txt");
         performPost(asset);
     }
 
-    @When("^I create a new asset with name \"([^\"]*)\", description \"([^\"]*)\", content type \"([^\"]*)\" and size (\\d+)$")
-    public void iCreateANewAssetWithAllFields(String name, String description,
-                                              String contentType, Long size) throws Throwable {
+    @When("^I create a new asset with name \"([^\"]*)\", description \"([^\"]*)\" and url \"([^\"]*)\"$")
+    public void iCreateANewAssetWithAllFields(String name, String description, String url) throws Throwable {
         currentAssetId = UUID.randomUUID().toString();
+        // ContentType is derived from URL
         Asset asset = new Asset(currentAssetId, name, description,
-                contentType, size, "storage/" + currentAssetId);
+                null, url);
         performPost(asset);
     }
 
@@ -110,10 +110,7 @@ public class ManageAssetStepDefs {
         stepDefs.result.andExpect(jsonPath("$.contentType", is(contentType)));
     }
 
-    @And("^The asset has size (\\d+)$")
-    public void theAssetHasSize(Long size) throws Throwable {
-        stepDefs.result.andExpect(jsonPath("$.size").value(size));
-    }
+
 
     // And — ownership assertions
 

@@ -32,10 +32,7 @@ public class Asset extends UriEntity<String> {
     private String contentType;   // e.g., image/png, video/mp4
 
     @Column(nullable = false)
-    private Long size;            // in bytes
-
-    @Column(nullable = false, unique = true)
-    private String storageKey;    // path or S3 key
+    private String url;
 
     // --- Relationships ---
     @ManyToOne
@@ -62,13 +59,12 @@ public class Asset extends UriEntity<String> {
     private ZonedDateTime updatedAt;
 
     public Asset(String id, String name, String description,
-                 String contentType, Long size, String storageKey) {
+                 String contentType, String url) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.contentType = contentType;
-        this.size = size;
-        this.storageKey = storageKey;
+        this.url = url;
     }
 
     @PrePersist
