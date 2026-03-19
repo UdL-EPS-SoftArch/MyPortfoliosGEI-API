@@ -9,7 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 
-
 @RepositoryRestResource
 public interface PortfolioRepository extends CrudRepository<Portfolio, Long>, PagingAndSortingRepository<Portfolio, Long> {
     List<Portfolio> findByCreator(@Param("user") User creator);
