@@ -18,7 +18,8 @@ public class Tag extends UriEntity<Long> {
 
     @NotBlank
     @EqualsAndHashCode.Include
-    @Column(nullable = false, unique = true)
+    @Pattern(regexp = "^[a-zA-Z0-9 ]+$", message = "Only alphanumeric characters and spaces are allowed")
+    @Column(unique = true)
     private String name;
 
     public Tag() {}
