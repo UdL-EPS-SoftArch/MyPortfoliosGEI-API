@@ -1,14 +1,13 @@
 package cat.udl.eps.softarch.demo.steps;
 
 import cat.udl.eps.softarch.demo.domain.Tag;
+import cat.udl.eps.softarch.demo.domain.User;
 import cat.udl.eps.softarch.demo.repository.TagRepository;
+import cat.udl.eps.softarch.demo.repository.UserRepository;
 import io.cucumber.java.en.*;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -19,24 +18,25 @@ public class ManageTagStepDefs {
 
     private final StepDefs stepDefs;
     private final TagRepository tagRepository;
-
+    private final UserRepository userRepository;
     private Long lastTagId;
 
-    private static final String TEST_USER = "user";
-    private static final String TEST_PASSWORD = "password";
-
-    public ManageTagStepDefs(StepDefs stepDefs, TagRepository tagRepository) {
+    public ManageTagStepDefs(StepDefs stepDefs, TagRepository tagRepository, UserRepository userRepository) {
         this.stepDefs = stepDefs;
         this.tagRepository = tagRepository;
+        this.userRepository = userRepository;
     }
-
-    // -------------------------
-    // BACKGROUND
-    // -------------------------
 
     @Given("the system is initialized")
     public void systemInitialized() {
-        // no-op
+        if (!userRepository.existsById("user")) {
+            User user = new User();
+            user.setUsername("user");
+            user.setPassword("password");
+            user.setEmail("user@example.com");
+            user.encodePassword();
+            userRepository.save(user);
+        }
     }
 
     @Given("all tags are cleared")
@@ -44,118 +44,82 @@ public class ManageTagStepDefs {
         tagRepository.deleteAll();
     }
 
-    // -------------------------
-    // GIVEN TAG EXISTS
-    // -------------------------
-
     @Given("^a tag exists with name \"([^\"]*)\"$")
     public void aTagExists(String name) {
-        Tag tag = new Tag(name);
-        tagRepository.save(tag);
+        Tag tag = tagRepository.findByName(name).orElseGet(() -> {
+            Tag newTag = new Tag(name);
+            return tagRepository.save(newTag);
+        });
         lastTagId = tag.getId();
     }
 
-    // -------------------------
-    // CREATE
-    // -------------------------
-
     @When("^I create a tag with name \"([^\"]*)\"$")
     public void createTag(String name) throws Exception {
-
         Tag tag = new Tag(name);
-
         stepDefs.result = stepDefs.mockMvc.perform(
-            withAuth(post("/tags")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(stepDefs.mapper.writeValueAsString(tag))
-                .characterEncoding(StandardCharsets.UTF_8)
-                .accept(MediaType.APPLICATION_JSON))
+                post("/tags")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(stepDefs.mapper.writeValueAsString(tag))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .with(AuthenticationStepDefs.authenticate()) 
         ).andDo(print());
     }
 
-    // -------------------------
-    // READ
-    // -------------------------
-
     @When("I request all tags")
     public void requestAllTags() throws Exception {
-
         stepDefs.result = stepDefs.mockMvc.perform(
-            withAuth(get("/tags").accept(MediaType.APPLICATION_JSON))
+                get("/tags")
+                        .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
     }
 
     @When("I request that tag by id")
     public void requestTagById() throws Exception {
-
         stepDefs.result = stepDefs.mockMvc.perform(
-            withAuth(get("/tags/" + lastTagId).accept(MediaType.APPLICATION_JSON))
+                get("/tags/" + lastTagId)
+                        .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
     }
 
     @When("^I request tag with id (\\d+)$")
     public void requestTagByIdNumber(Long id) throws Exception {
-
         stepDefs.result = stepDefs.mockMvc.perform(
-            withAuth(get("/tags/" + id).accept(MediaType.APPLICATION_JSON))
+                get("/tags/" + id)
+                        .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
     }
 
-    // -------------------------
-    // DELETE
-    // -------------------------
-
     @When("I delete that tag")
     public void deleteThatTag() throws Exception {
-
         stepDefs.result = stepDefs.mockMvc.perform(
-            withAuth(delete("/tags/" + lastTagId))
+                delete("/tags/" + lastTagId)
+                        .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
     }
 
     @When("^I delete tag with id (\\d+)$")
     public void deleteTagById(Long id) throws Exception {
-
         stepDefs.result = stepDefs.mockMvc.perform(
-            withAuth(delete("/tags/" + id))
+                delete("/tags/" + id)
+                        .with(AuthenticationStepDefs.authenticate())
         ).andDo(print());
     }
 
-    // -------------------------
-    // ASSERTIONS
-    // -------------------------
-
     @Then("^the tag name should be \"([^\"]*)\"$")
     public void tagNameShouldBe(String name) throws Exception {
-
-        stepDefs.result.andExpect(
-            jsonPath("$.name", is(name))
-        );
+        stepDefs.result.andExpect(jsonPath("$.name", is(name)));
     }
 
     @Then("^the response should contain (\\d+) tags$")
     public void responseShouldContainTags(int count) throws Exception {
-
-        stepDefs.result.andExpect(
-            jsonPath("$._embedded.tags", hasSize(count))
-        );
+        stepDefs.result.andExpect(jsonPath("$._embedded.tags", hasSize(count)));
     }
 
     @Then("requesting that tag by id should return 404")
     public void requestDeletedTag() throws Exception {
-
         stepDefs.mockMvc.perform(
-            withAuth(get("/tags/" + lastTagId))
+                get("/tags/" + lastTagId)
+                        .with(AuthenticationStepDefs.authenticate())
         ).andExpect(status().isNotFound());
-    }
-
-    // -------------------------
-    // HELPER METHOD FOR AUTH
-    // -------------------------
-
-    private RequestBuilder withAuth(MockHttpServletRequestBuilder request) {
-        String basicAuth = Base64.getEncoder()
-            .encodeToString((TEST_USER + ":" + TEST_PASSWORD).getBytes());
-        return request.header("Authorization", "Basic " + basicAuth);
     }
 }
