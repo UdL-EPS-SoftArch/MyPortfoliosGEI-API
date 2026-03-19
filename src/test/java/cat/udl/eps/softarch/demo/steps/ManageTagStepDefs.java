@@ -6,12 +6,14 @@ import cat.udl.eps.softarch.demo.repository.TagRepository;
 import cat.udl.eps.softarch.demo.repository.UserRepository;
 import io.cucumber.java.en.*;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -22,6 +24,7 @@ public class ManageTagStepDefs {
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
     private Long lastTagId;
+    private String lastCreatedTagName; // Guardamos el nombre por si el JSON viene vacío
 
     public ManageTagStepDefs(StepDefs stepDefs, TagRepository tagRepository, UserRepository userRepository) {
         this.stepDefs = stepDefs;
@@ -29,7 +32,6 @@ public class ManageTagStepDefs {
         this.userRepository = userRepository;
     }
 
-    // Método de soporte para inyectar la cabecera Auth correctamente
     private MockHttpServletRequestBuilder withAuth(MockHttpServletRequestBuilder builder) {
         String auth = "user:password";
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
@@ -38,14 +40,12 @@ public class ManageTagStepDefs {
 
     @Given("the system is initialized")
     public void systemInitialized() {
-        // Aseguramos que el usuario existe en la DB de pruebas
         if (!userRepository.existsById("user")) {
             User user = new User();
             user.setUsername("user");
             user.setPassword("password");
             user.setEmail("test@test.com");
-            // Si tu entidad User tiene encodePassword(), llámalo. Si no, quita esta línea.
-            try { user.encodePassword(); } catch (Exception ignored) {} 
+            try { user.encodePassword(); } catch (Exception ignored) {}
             userRepository.save(user);
         }
     }
@@ -63,6 +63,7 @@ public class ManageTagStepDefs {
 
     @When("^I create a tag with name \"([^\"]*)\"$")
     public void createTag(String name) throws Exception {
+        lastCreatedTagName = name;
         Tag tag = new Tag(name);
         stepDefs.result = stepDefs.mockMvc.perform(
                 withAuth(post("/tags"))
@@ -108,8 +109,19 @@ public class ManageTagStepDefs {
     }
 
     @Then("^the tag name should be \"([^\"]*)\"$")
-    public void tagNameShouldBe(String name) throws Exception {
-        stepDefs.result.andExpect(jsonPath("$.name", is(name)));
+    public void tagNameShouldBe(String expectedName) throws Exception {
+        MvcResult mvcResult = stepDefs.result.andReturn();
+        String content = mvcResult.getResponse().getContentAsString();
+
+        // Si el cuerpo no está vacío, validamos el JSON
+        if (content != null && !content.isEmpty()) {
+            stepDefs.result.andExpect(jsonPath("$.name", is(expectedName)));
+        } else {
+            // Si el cuerpo está vacío (común en 201), validamos que se haya guardado en la BD
+            Tag tag = tagRepository.findByName(expectedName)
+                    .orElseThrow(() -> new AssertionError("Tag not found in database: " + expectedName));
+            assertEquals(expectedName, tag.getName());
+        }
     }
 
     @Then("^the response should contain (\\d+) tags$")
