@@ -21,6 +21,11 @@ public class Portfolio extends UriEntity<Long> {
     private Long id;
 
     @NotBlank
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
+
+
+    @NotBlank
     @Column(nullable = false)
     @Setter
     private String name;
