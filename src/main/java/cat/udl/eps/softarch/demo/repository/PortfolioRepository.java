@@ -14,22 +14,7 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface PortfolioRepository extends CrudRepository<Portfolio, Long>, PagingAndSortingRepository<Portfolio, Long> {
-
     List<Portfolio> findByCreator(@Param("user") User creator);
-
     List<Portfolio> findByNameContaining(@Param("name") String text);
-
-    Page<Portfolio> findByNameContaining(
-        @Param("name") String text,
-        Pageable pageable
-    );
-
-    List<Portfolio> findByVisibility(@Param("visibility") Visibility visibility);
-
-    List<Portfolio> findByCreatorAndVisibility(
-        @Param("user") User creator,
-        @Param("visibility") Visibility visibility
-    );
-
-    List<Portfolio> findAllByOrderByIdDesc();
+    List<Portfolio> findByIsPrivate(@Param("isPrivate") Boolean isPrivate);
 }
