@@ -45,8 +45,6 @@ public class Project extends UriEntity<Long> {
     @DateTimeFormat
     private ZonedDateTime lastModified;
 
-    private java.util.List<Asset> assets;
-
     // User Relations
 
     @Setter
@@ -63,8 +61,6 @@ public class Project extends UriEntity<Long> {
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
     private Project project;
-    
-    private java.util.List<User> collaborators;
 
     // --- Constructors ---
 
