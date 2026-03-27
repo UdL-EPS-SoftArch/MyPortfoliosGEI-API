@@ -32,10 +32,6 @@ public class Project extends UriEntity<Long> {
 
     @NotBlank
     @Enumerated(EnumType.STRING)
-    private Visibility visibility;
-
-    @NotBlank
-    @Enumerated(EnumType.STRING)
     private Status status;
     private Boolean isPrivate;
 
