@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import cat.udl.eps.softarch.demo.domain.Project;
-import cat.udl.eps.softarch.demo.domain.Visibility;
 import cat.udl.eps.softarch.demo.domain.Status;
 import cat.udl.eps.softarch.demo.repository.ProjectRepository;
 import io.cucumber.java.en.And;
@@ -26,13 +25,10 @@ public class ManageProjectStepDefs {
         this.projectRepository = projectRepository;
     }
 
-    @When("^I create a new project with name \"([^\"]*)\", description \"([^\"]*)\", visibility \"([^\"]*)\" and status \"([^\"]*)\"$")
-    public void iCreateANewProject(String name, String description, String visibilityStr, String statusStr) throws Throwable {
-        Project project = new Project(name, description, "PRIVATE".equals(visibilityStr));
-        
-        if (visibilityStr != null && !visibilityStr.isEmpty()) {
-            project.setVisibility(Visibility.valueOf(visibilityStr));
-        }
+    @When("^I create a new project with name \"([^\"]*)\", description \"([^\"]*)\" and status \"([^\"]*)\"$")
+    public void iCreateANewProject(String name, String description, String statusStr) throws Throwable {
+        Project project = new Project(name, description, Boolean.FALSE);
+
         if (statusStr != null && !statusStr.isEmpty()) {
             project.setStatus(Status.valueOf(statusStr));
         }
@@ -68,11 +64,6 @@ public class ManageProjectStepDefs {
     @And("^The project has description \"([^\"]*)\"$")
     public void theProjectHasDescription(String description) throws Throwable {
         stepDefs.result.andExpect(jsonPath("$.description", is(description)));
-    }
-
-    @And("^The project has visibility \"([^\"]*)\"$")
-    public void theProjectHasVisibility(String visibility) throws Throwable {
-        stepDefs.result.andExpect(jsonPath("$.visibility", is(visibility)));
     }
 
     @And("^The project has status \"([^\"]*)\"$")
