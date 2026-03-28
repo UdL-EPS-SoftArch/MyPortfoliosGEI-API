@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import java.util.List;
 import java.util.Optional;
 
-
 @RepositoryRestResource
 public interface PortfolioRepository extends CrudRepository<Portfolio, Long>, PagingAndSortingRepository<Portfolio, Long> {
     List<Portfolio> findByCreator(@Param("user") User creator);

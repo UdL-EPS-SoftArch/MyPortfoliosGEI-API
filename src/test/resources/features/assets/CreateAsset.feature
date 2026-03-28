@@ -17,12 +17,12 @@ Feature: Create Asset
 
   Scenario: Successfully create an asset with full metadata
     Given I login as "collaborator" with password "password123"
-    When I create a new asset with name "Banner", description "Project banner image", content type "image/png" and size 204800
+    When I create a new asset with name "Banner", description "Project banner image" and url "http://example.com/image.png"
     Then The response code is 201
     And The asset has name "Banner"
     And The asset has description "Project banner image"
     And The asset has content type "image/png"
-    And The asset has size 204800
+
 
   Scenario: Created asset is attributed to the authenticated user
     Given I login as "collaborator" with password "password123"
@@ -45,6 +45,6 @@ Feature: Create Asset
 
   Scenario: Cannot create an asset with full metadata without authentication
     Given I'm not logged in
-    When I create a new asset with name "Sneaky Banner", description "Should be rejected", content type "image/png" and size 1024
+    When I create a new asset with name "Sneaky Banner", description "Should be rejected" and url "http://example.com/sneaky.png"
     Then The response code is 401
 
