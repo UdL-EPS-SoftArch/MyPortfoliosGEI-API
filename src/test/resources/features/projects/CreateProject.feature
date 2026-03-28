@@ -6,8 +6,6 @@ Feature: Create Project
   Background:
     Given There is a registered user with username "collaborator" and password "password123" and email "collaborator@sample.app"
 
-  # ── Success ─────────────────────────────────────────────────────────────────
-
   Scenario: Successfully create a project with minimal fields
     Given I login as "collaborator" with password "password123"
     When I create a new project with name "MyNewProject", description "A sample project" and status "ToDo"
@@ -22,8 +20,6 @@ Feature: Create Project
     When I create a new project with name "Attributed Project", description "Ownership check" and status "In_Progress"
     Then The response code is 201
     And The project was created by "collaborator"
-
-  # ── Failure ──────────────────────────────────────────────────────────────────
 
   Scenario: Cannot create a project with a blank name
     Given I login as "collaborator" with password "password123"
