@@ -17,7 +17,6 @@ import java.util.Optional;
 public interface PortfolioRepository extends CrudRepository<Portfolio, Long>, PagingAndSortingRepository<Portfolio, Long> {
     List<Portfolio> findByCreator(@Param("user") User creator);
     List<Portfolio> findByNameContaining(@Param("name") String text);
-    List<Portfolio> findByVisibility(@Param("visibility") Visibility visibility);
-    Optional<Project> findByName(String name);
+    List<Portfolio> findByName(@Param("name") String name);
     List<Portfolio> findByIsPrivate(@Param("isPrivate") Boolean isPrivate);
 }
