@@ -1,13 +1,10 @@
 package cat.udl.eps.softarch.demo.domain;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 import java.time.ZonedDateTime;
 
@@ -26,8 +23,14 @@ public class Project extends UriEntity<Long> {
 
     @NotBlank
     private String name;
+
     private String description;
+
     private boolean flagged;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     private Boolean isPrivate;
 
     @DateTimeFormat
@@ -36,7 +39,23 @@ public class Project extends UriEntity<Long> {
     @DateTimeFormat
     private ZonedDateTime lastModified;
 
+    // User Relations
+
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User creator;
+
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private User moderator;
+
+    @ManyToOne
+    @JsonIdentityReference(alwaysAsId = true)
+    private Project project;
+
     // --- Constructors ---
+
+    public Project() {}
 
     /**
      * Constructs a new Project with the specified name, description, and visibility.
