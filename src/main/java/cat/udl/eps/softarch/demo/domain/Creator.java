@@ -19,20 +19,7 @@ public class Creator extends User {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Portfolio> portfolios = new ArrayList<>();
 
-    @JoinTable(
-        name = "creator_creates_tag",
-        joinColumns = @JoinColumn(name = "creator_username"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-
-
-    // private List<Tag> createdTags = new ArrayList<>();
-
-    //@OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Collaborator> collaborators = new ArrayList<>();
-
-
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Asset> assets = new ArrayList<>();
 
 

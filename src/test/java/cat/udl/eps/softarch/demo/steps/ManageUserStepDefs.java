@@ -84,7 +84,7 @@ public class ManageUserStepDefs {
 
     @And("^The user has username \"([^\"]*)\"$")
     public void theUserHasUsername(String username) throws Throwable {
-        stepDefs.result.andExpect(jsonPath("$.id", is(username)));
+        stepDefs.result.andExpect(jsonPath("$.username", is(username)));
     }
 
     @And("^The user has email \"([^\"]*)\"$")

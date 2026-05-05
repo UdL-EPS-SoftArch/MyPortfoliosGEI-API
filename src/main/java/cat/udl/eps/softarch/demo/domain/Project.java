@@ -38,6 +38,8 @@ public class Project extends UriEntity<Long> {
 
     // --- Constructors ---
 
+    protected Project() {}
+
     /**
      * Constructs a new Project with the specified name, description, and visibility.
      * @param name the name of the project

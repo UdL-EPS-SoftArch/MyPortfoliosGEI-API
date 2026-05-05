@@ -20,6 +20,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "DemoUser") //Avoid collision with system table User
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class User extends UriEntity<String> implements UserDetails {
