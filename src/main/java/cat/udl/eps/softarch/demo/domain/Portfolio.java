@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 
 @Entity
@@ -26,10 +27,12 @@ public class Portfolio extends UriEntity<Long> {
 
     @Setter
     @Column(length = 2000)
+    @Length(max = 2000)
     private String description;
 
     @Setter
-    private Boolean isPrivate;
+    @Column(nullable = false)
+    private Boolean isPrivate = false;
 
     @Setter
     @ManyToOne
