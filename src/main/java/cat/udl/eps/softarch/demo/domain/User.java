@@ -60,8 +60,25 @@ public class User extends UriEntity<String> implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+    public void setId(String username) {
+        this.id = username;
+    }
+
+    public void setEmail(String mail) {
+        this.email = email;
+    }
+
 
     @Override
 	public boolean isAccountNonExpired() {
@@ -83,16 +100,4 @@ public class User extends UriEntity<String> implements UserDetails {
 		return true;
 	}
 
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setEmail(String mail) {
-        this.email = email;
-    }
 }
