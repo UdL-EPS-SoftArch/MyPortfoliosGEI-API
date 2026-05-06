@@ -38,4 +38,12 @@ public class Record extends UriEntity<Long> {
     public Long getId() {
         return id;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOwnedBy(User owner) {
+        this.ownedBy = owner;
+    }
 }
