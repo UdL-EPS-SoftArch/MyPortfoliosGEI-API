@@ -34,4 +34,8 @@ public class Record extends UriEntity<Long> {
     private User ownedBy;
 
 
+    @Override
+    public Long getId() {
+        return id;
+    }
 }

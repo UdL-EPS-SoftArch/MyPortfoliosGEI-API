@@ -34,4 +34,7 @@ public class Tag extends UriEntity<Long> {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
 }

@@ -58,7 +58,12 @@ public class User extends UriEntity<String> implements UserDetails {
 		return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
 	}
 
-	@Override
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
@@ -77,4 +82,17 @@ public class User extends UriEntity<String> implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String mail) {
+        this.email = email;
+    }
 }
