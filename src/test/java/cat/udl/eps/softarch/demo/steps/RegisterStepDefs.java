@@ -87,6 +87,11 @@ public class RegisterStepDefs {
                     .accept(MediaType.APPLICATION_JSON)
                     .with(AuthenticationStepDefs.authenticate()))
             .andDo(print());
+
+    if (stepDefs.result.andReturn().getResponse().getStatus() == 201) {
+      AuthenticationStepDefs.currentUsername = username;
+      AuthenticationStepDefs.currentPassword = password;
+    }
   }
 
   @And("^It has been created a user with username \"([^\"]*)\" and email \"([^\"]*)\", the password is not returned$")
@@ -101,11 +106,7 @@ public class RegisterStepDefs {
   }
 
   @And("^It has not been created a user with username \"([^\"]*)\"$")
-  public void itHasNotBeenCreatedAUserWithUsername(String username) throws Throwable {
-    stepDefs.result = stepDefs.mockMvc.perform(
-            get("/users/{username}", username)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .with(AuthenticationStepDefs.authenticate()))
-            .andExpect(status().isNotFound());
+  public void itHasNotBeenCreatedAUserWithUsername(String username) {
+    assertFalse(userRepository.existsById(username), "User \"" + username + "\" shouldn't exist");
   }
 }
