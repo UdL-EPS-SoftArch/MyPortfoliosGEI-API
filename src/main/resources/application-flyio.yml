@@ -1,4 +1,4 @@
-allowed-origins: "https://my-portfolios-gei.vercel.app,https://my-portfolios-gei-*.vercel.app"
+allowed-origins: "https://my-portfolios-gei.vercel.app,https://my-portfolios-*.vercel.app"
 
 logging:
     level:
