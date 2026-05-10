@@ -59,6 +59,10 @@ public class StepDefs {
     public void theResponseCodeIs(int code) throws Throwable {
         result.andExpect(status().is(code));
     }
+    @Then("^the response status should be (\\d+)$")
+    public void theResponseStatusShouldBe(int code) throws Throwable {
+        result.andExpect(status().is(code));
+    }
 
     @And("^The error message is \"([^\"]*)\"$")
     public void theErrorMessageIs(String message) throws Throwable {
