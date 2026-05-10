@@ -6,12 +6,16 @@ import cat.udl.eps.softarch.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import jakarta.annotation.PostConstruct;
-
+import cat.udl.eps.softarch.demo.domain.Tag;
+import cat.udl.eps.softarch.demo.repository.TagRepository;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 
+
 @Configuration
 public class DBInitialization {
+
+
     @Value("${default-password}")
     String defaultPassword;
 
@@ -20,10 +24,13 @@ public class DBInitialization {
 
     private final RecordRepository recordRepository;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
 
-    public DBInitialization(UserRepository userRepository, RecordRepository recordRepository) {
+
+    public DBInitialization(UserRepository userRepository, RecordRepository recordRepository, TagRepository tagRepository) {
         this.userRepository = userRepository;
         this.recordRepository = recordRepository;
+        this.tagRepository = tagRepository;
     }
 
     @PostConstruct
