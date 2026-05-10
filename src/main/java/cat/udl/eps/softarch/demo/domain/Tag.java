@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,20 +16,22 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = "records")
+@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 public class Tag extends UriEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank
-    @EqualsAndHashCode.Include
+    @Size(max = 50)
     @Pattern(
-        regexp = "^[a-zA-Z0-9 ]+$",
-        message = "Only alphanumeric characters and spaces are allowed"
+        regexp = "^[\\p{L}0-9 _.-]+$",
+        message = "Only letters, numbers, spaces, dots, dashes and underscores are allowed"
     )
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 50)
     private String name;
 
     @ManyToMany(mappedBy = "tags")
@@ -40,8 +44,26 @@ public class Tag extends UriEntity<Long> {
         this.name = name;
     }
 
+    @PrePersist
+    @PreUpdate
+    public void normalize() {
+        if (name != null) {
+            name = name.trim();
+        }
+    }
+
     @Override
     public Long getId() {
         return id;
+    }
+
+    public void addRecord(Record record) {
+        records.add(record);
+        record.getTags().add(this);
+    }
+
+    public void removeRecord(Record record) {
+        records.remove(record);
+        record.getTags().remove(this);
     }
 }

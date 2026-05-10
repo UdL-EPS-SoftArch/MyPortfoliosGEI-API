@@ -31,9 +31,6 @@ public class Record extends UriEntity<Long> {
 
     @NotBlank
     private String name;
-    @ManyToMany(mappedBy = "tags")
-    @JsonIgnore
-    private Set<Record> records = new HashSet<>();
 
     private String description;
 
@@ -47,33 +44,18 @@ public class Record extends UriEntity<Long> {
     @JsonIdentityReference(alwaysAsId = true)
     private User ownedBy;
 
-
     @Override
     public Long getId() {
         return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void addTag(Tag tag) {
+        tags.add(tag);
+        tag.getRecords().add(this);
     }
 
-    public void setOwnedBy(User owner) {
-        this.ownedBy = owner;
-    }
-
-    public void setCreated(ZonedDateTime timeStamp) {
-        this.created = timeStamp;
-    }
-
-    public void setModified(ZonedDateTime timeStamp) {
-        this.modified = timeStamp;
-    }
-
-    public void setDescription(String s) {
-        this.description = s;
-    }
-
-    public ZonedDateTime getCreated() {
-        return created;
+    public void removeTag(Tag tag) {
+        tags.remove(tag);
+        tag.getRecords().remove(this);
     }
 }
