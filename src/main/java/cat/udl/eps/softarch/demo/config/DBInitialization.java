@@ -62,5 +62,12 @@ public class DBInitialization {
                 recordRepository.save(record);
             }
         }
+        if (!tagRepository.existsByName("Backend")) {
+            tagRepository.save(new Tag("Backend"));
+        }
+
+        if (!tagRepository.existsByName("Frontend")) {
+            tagRepository.save(new Tag("Frontend"));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package cat.udl.eps.softarch.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -30,6 +31,9 @@ public class Record extends UriEntity<Long> {
 
     @NotBlank
     private String name;
+    @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
+    private Set<Record> records = new HashSet<>();
 
     private String description;
 
