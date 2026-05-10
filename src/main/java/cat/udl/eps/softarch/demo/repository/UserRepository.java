@@ -5,10 +5,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @RepositoryRestResource
+@Validated
 public interface UserRepository extends CrudRepository<User, String>, PagingAndSortingRepository<User, String> {
 
   /* Interface provides automatically, as defined in
