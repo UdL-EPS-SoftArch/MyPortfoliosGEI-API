@@ -75,7 +75,7 @@ public class User extends UriEntity<String> implements UserDetails {
         this.id = username;
     }
 
-    public void setEmail(String mail) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
