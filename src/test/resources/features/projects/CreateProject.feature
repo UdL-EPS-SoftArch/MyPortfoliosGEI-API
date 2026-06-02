@@ -13,7 +13,7 @@ Feature: Create Project
     And The project has name "MyNewProject"
     And The project has description "A sample project"
     And The project has status "ToDo"
-    And The project has isPrivate false
+    And The project has visibility "PUBLIC"
 
   Scenario: Created project is attributed to the authenticated user
     Given I login as "collaborator" with password "password123"

@@ -33,7 +33,7 @@ public class PortfolioStepDefs {
             {
             "name": "%s",
             "description": "Test description",
-            "isPrivate": false,
+            "visibility": "PUBLIC",
             "creator": "/users/%s"
             }
             """.formatted(name, AuthenticationStepDefs.currentUsername);
@@ -96,7 +96,7 @@ public class PortfolioStepDefs {
             {
               "name": "",
               "description": "This should fail due to @NotBlank",
-              "isPrivate": false
+              "visibility": "PUBLIC"
             }
             """;
 
@@ -123,7 +123,7 @@ public class PortfolioStepDefs {
             {
               "name": "Portfolio Largo",
               "description": "%s",
-              "isPrivate": false
+              "visibility": "PUBLIC"
             }
             """.formatted(longDescription);
 
@@ -143,7 +143,7 @@ public class PortfolioStepDefs {
             {
               "name": "%s",
               "description": "Top Secret",
-              "isPrivate": true
+              "visibility": "PRIVATE"
             }
             """.formatted(name);
 
@@ -160,8 +160,8 @@ public class PortfolioStepDefs {
     @Then("The portfolio {string} should not be visible in the public list")
     public void thePortfolioShouldNotBeVisibleInThePublicList(String portfolioName) throws Exception {
         stepDefs.mockMvc.perform(
-                get("/portfolios/search/findByIsPrivate")
-                    .param("isPrivate", "false")
+                get("/portfolios/search/findByVisibility")
+                    .param("visibility", "PUBLIC")
                     .accept(MediaType.APPLICATION_JSON)
             )
             .andDo(print())
@@ -175,7 +175,7 @@ public class PortfolioStepDefs {
             {
               "name": "%s",
               "description": "Admin created this",
-              "isPrivate": false,
+              "visibility": "PUBLIC",
               "creator": "/users/%s"
             }
             """.formatted(name, targetUsername);

@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import cat.udl.eps.softarch.demo.domain.Project;
 import cat.udl.eps.softarch.demo.domain.Status;
+import cat.udl.eps.softarch.demo.domain.Visibility;
 import cat.udl.eps.softarch.demo.repository.ProjectRepository;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
@@ -27,7 +28,7 @@ public class ManageProjectStepDefs {
 
     @When("^I create a new project with name \"([^\"]*)\", description \"([^\"]*)\" and status \"([^\"]*)\"$")
     public void iCreateANewProject(String name, String description, String statusStr) throws Throwable {
-        Project project = new Project(name, description, Boolean.FALSE);
+        Project project = new Project(name, description, Visibility.PUBLIC);
 
         if (statusStr != null && !statusStr.isEmpty()) {
             project.setStatus(Status.valueOf(statusStr));
@@ -71,10 +72,9 @@ public class ManageProjectStepDefs {
         stepDefs.result.andExpect(jsonPath("$.status", is(status)));
     }
 
-    @And("^The project has isPrivate (true|false)$")
-    public void theProjectHasIsPrivate(String isPrivateStr) throws Throwable {
-        boolean isPrivate = Boolean.parseBoolean(isPrivateStr);
-        stepDefs.result.andExpect(jsonPath("$.isPrivate", is(isPrivate)));
+    @And("^The project has visibility \"([^\"]*)\"$")
+    public void theProjectHasVisibility(String visibility) throws Throwable {
+        stepDefs.result.andExpect(jsonPath("$.visibility", is(visibility)));
     }
 
     @And("^The project was created by \"([^\"]*)\"$")
