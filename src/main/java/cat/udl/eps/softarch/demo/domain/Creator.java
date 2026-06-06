@@ -22,7 +22,6 @@ public class Creator extends User {
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Asset> assets = new ArrayList<>();
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER,ROLE_CREATOR");
